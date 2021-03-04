@@ -1,0 +1,2 @@
+# FEUP_SOPE_PROJECTS
+SOPE Projects
