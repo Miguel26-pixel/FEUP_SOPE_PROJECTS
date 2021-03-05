@@ -5,6 +5,10 @@
 #include <string.h>
 #include <stdbool.h>
 
-struct stat processStat(char* argv[]);
+struct stat processMODE(int argc, char* argv[]);
+
+struct stat processOCTAL_MODE(int argc, char* argv[]);
+
+
 
 bool changePermissions(char *dir, struct stat stat_buf);

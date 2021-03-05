@@ -1,17 +1,16 @@
 #include "permissions.h"
 
-struct stat processStat(char* argv[]) {
+struct stat processMODE(int argc, char* argv[]) {
     char users[4], permissions[3], operator;
     int j = 0;
 
-    //muda buf
-    for (int i = 0; i < strlen(argv[1]); i++) {
-        if (argv[1][i] == 'u' || argv[1][i] == 'g' || argv[1][i] == 'o' || argv[1][i] == 'a')
-            users[i] = argv[1][i];
-        else if (argv[1][i] == '+' || argv[1][i] == '-' || argv[1][i] == '=') 
+    for (size_t i = 0; i < strlen(argv[argc - 2]); i++) {
+        if (argv[argc - 2][i] == 'u' || argv[argc - 2][i] == 'g' || argv[argc - 2][i] == 'o' || argv[argc - 2][i] == 'a')
+            users[i] = argv[argc - 2][i];
+        else if (argv[argc - 2][i] == '+' || argv[argc - 2][i] == '-' || argv[argc - 2][i] == '=') 
             operator = argv[1][i];
-        else if (argv[1][i] == 'r' || argv[1][i] == 'w' || argv[1][i] == 'x') {
-            permissions[j] = argv[1][i];             
+        else if (argv[argc - 2][i] == 'r' || argv[argc - 2][i] == 'w' || argv[argc - 2][i] == 'x') {
+            permissions[j] = argv[argc - 2][i];             
             j++;
         }
         else {
@@ -21,15 +20,13 @@ struct stat processStat(char* argv[]) {
         }
     }
 
-    //armazena informação sobre file / dir
     struct stat stat_buf;
-    //lstat -> ver symbolic links
-    if (operator != '=')
-        stat(argv[2], &stat_buf);
+    stat(argv[2], &stat_buf);
 
+    if (operator != '=') stat_buf.st_mode = 0;
 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 4; j++)
             switch(permissions[i]){
                 case 'r':
                     switch (users[j]) {
@@ -97,8 +94,116 @@ struct stat processStat(char* argv[]) {
                     break;
                 default: break;
             }
+    return stat_buf;
+}
+
+struct stat processOCTAL_MODE(int argc, char* argv[]) { //U G O     //r w x
+
+    struct stat stat_buf;
+    stat(argv[2], &stat_buf);
+
+    stat_buf.st_mode = 0;
+
+    for (int i = 1; i < 4; i++)
+        switch(argv[argc - 2][i]) {
+            case '1': //001
+                switch(i) {
+                    case 1:
+                        printf("entrei1");
+                        stat_buf.st_mode = stat_buf.st_mode | S_IXUSR;
+                        break;
+                    case 2:
+                        printf("entrei2");
+                        stat_buf.st_mode = stat_buf.st_mode | S_IXGRP;
+                        break;
+                    case 3:
+                        printf("entrei3");
+                        stat_buf.st_mode = stat_buf.st_mode | S_IXOTH;
+                        break;
+                }
+                break;
+            case '2': //010
+                switch(i) {
+                    case 1:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IWUSR;
+                        break;
+                    case 2:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IWGRP;
+                        break;
+                    case 3:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IWOTH;
+                        break;
+                }
+                break;
+            case '3': //011
+                switch(i) {
+                    case 1:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IXUSR | S_IWUSR;
+                        break;
+                    case 2:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IXGRP | S_IWGRP;
+                        break;
+                    case 3:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IXOTH | S_IWOTH;
+                        break;
+                }
+                break;
+            case '4': //100
+                switch(i) {
+                    case 1:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IRUSR;
+                        break;
+                    case 2:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IRGRP;
+                        break;
+                    case 3:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IROTH;
+                        break;
+                }
+                break;
+            case '5': //101
+                switch(i) {
+                    case 1:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IRUSR | S_IXUSR;;
+                        break;
+                    case 2:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IRGRP | S_IXGRP;;
+                        break;
+                    case 3:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IROTH | S_IXOTH;;
+                        break;
+                }
+                break;
+            case '6': //110
+                switch(i) {
+                    case 1:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IRUSR | S_IWUSR;
+                        break;
+                    case 2:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IRGRP | S_IWGRP;
+                        break;
+                    case 3:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IROTH | S_IWOTH;
+                        break;
+                }
+                break;
+            case '7': //111
+                switch(i) {
+                    case 1:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IRUSR | S_IXUSR | S_IWUSR;
+                        break;
+                    case 2:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IRGRP | S_IXGRP | S_IWGRP;
+                        break;
+                    case 3:
+                        stat_buf.st_mode = stat_buf.st_mode | S_IROTH | S_IXOTH | S_IWOTH;
+                        break;
+                }
+                break;
+            default: 
+                stat_buf.st_mode = -1;
+                return stat_buf;
         }
-    }
     return stat_buf;
 }
 
