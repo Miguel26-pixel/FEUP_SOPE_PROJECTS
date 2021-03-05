@@ -36,14 +36,11 @@ struct stat processStat(char* argv[]) {
     if (operator != '=')
         stat(argv[2], &stat_buf);
 
-    printf("CHEGUEI!!!\n");
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 4; j++) {
             switch(permissions[i]){
                 case 'r':
-
-                printf("r\n");
                     switch (users[j]) {
                         case 'a':
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRUSR | S_IRGRP | S_IROTH;
@@ -65,7 +62,6 @@ struct stat processStat(char* argv[]) {
                     }
                     break;
                 case 'w':
-                printf("w\n");
                     switch (users[j]) {
                         case 'a':
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWUSR | S_IWGRP | S_IWOTH;
@@ -87,30 +83,24 @@ struct stat processStat(char* argv[]) {
                     }
                     break;
                 case 'x':
-                printf("x\n");
                     switch (users[j]) {
                         case 'a':
-                            printf("a\n");
-                            if (operator == '+' || operator == '=') {printf("ESTOU AQUIII\n");stat_buf.st_mode = stat_buf.st_mode | S_IXUSR | S_IXGRP | S_IXOTH;}
+                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXUSR | S_IXGRP | S_IXOTH;
                             if (operator == '-') stat_buf.st_mode = stat_buf.st_mode | ~S_IXUSR | ~S_IXGRP | ~S_IXOTH;
                             break;
                         case 'u':
-                        printf("u\n");
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXUSR;
                             if (operator == '-') stat_buf.st_mode = stat_buf.st_mode | ~S_IXUSR;
                             break;
                         case 'g':
-                        printf("g\n");
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXGRP;
                             if (operator == '-') stat_buf.st_mode = stat_buf.st_mode | ~S_IXGRP;
                             break;
                         case 'o':
-                        printf("o\n");
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXOTH;
                             if (operator == '-') stat_buf.st_mode = stat_buf.st_mode | ~S_IXOTH;
                             break;
                         default: 
-                        printf("default\n");
                         break;
                     }
                     break;
@@ -122,31 +112,17 @@ struct stat processStat(char* argv[]) {
 }
 
 int main(int argc, char* argv[], char* envp[]) {
-    printf("CHEGUEI!\n");
-
     if (argc != 3) { //without OPTIONS
         printf("usage: xmod [OPTIONS] MODE FILE/DIR\n");
         return 0;
     }
 
-    printf("CHEGUEI!\n");
-
     struct stat stat_buf = processStat(argv);
-
-    //struct stat buf;
-    //stat(argv[2], &buf);
-
-    printf("%d",stat_buf.st_mode);
-
-    
-
-    //buf.st_mode = buf.st_mode | S_IXUSR | S_IXOTH | S_IXGRP;
 
     if (chmod(argv[2], stat_buf.st_mode) < 0)
         printf("ERROR");
-    else printf("TOOP");
+    else printf("SUCCEED");
 
-    printf("Hello\nO miguel e carlos é paneleiro\n");
     return 0;
 }
 
