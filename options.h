@@ -4,9 +4,8 @@
 #include <dirent.h>
 #include <string.h>
 #include <stdbool.h>
+#include "utils.h"
 
-struct stat processMODE(int argc, char* argv[]);
+void processOPTIONSvc(struct stat before, struct stat after,int argc,char* argv[]);
 
-struct stat processOCTALMODE(int argc, char* argv[]);
-
-bool changePermissions(char *dir, struct stat stat_buf);
+void printPermissions(struct stat fileStat);

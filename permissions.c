@@ -21,9 +21,9 @@ struct stat processMODE(int argc, char* argv[]) {
     }
 
     struct stat stat_buf;
-    stat(argv[2], &stat_buf);
+    stat(argv[argc - 1], &stat_buf);
 
-    if (operator != '=') stat_buf.st_mode = 0;
+    if (operator == '=') stat_buf.st_mode = 0;
 
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 4; j++)
@@ -32,7 +32,7 @@ struct stat processMODE(int argc, char* argv[]) {
                     switch (users[j]) {
                         case 'a':
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRUSR | S_IRGRP | S_IROTH;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXUSR & ~S_IXGRP & ~S_IXOTH;
+                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IRUSR & ~S_IRGRP & ~S_IROTH;
                             break;
                         case 'u':
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRUSR;
@@ -52,8 +52,9 @@ struct stat processMODE(int argc, char* argv[]) {
                 case 'w':
                     switch (users[j]) {
                         case 'a':
+                            printf("entrei\n");
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWUSR | S_IWGRP | S_IWOTH;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXUSR & ~S_IXGRP & ~S_IXOTH;
+                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWUSR & ~S_IWGRP & ~S_IWOTH;
                             break;
                         case 'u':
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWUSR;
@@ -97,10 +98,10 @@ struct stat processMODE(int argc, char* argv[]) {
     return stat_buf;
 }
 
-struct stat processOCTAL_MODE(int argc, char* argv[]) { //U G O     //r w x
+struct stat processOCTALMODE(int argc, char* argv[]) { //U G O     //r w x
 
     struct stat stat_buf;
-    stat(argv[2], &stat_buf);
+    stat(argv[argc - 1], &stat_buf);
 
     stat_buf.st_mode = 0;
 
