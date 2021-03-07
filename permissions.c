@@ -52,7 +52,6 @@ struct stat processMODE(int argc, char* argv[]) {
                 case 'w':
                     switch (users[j]) {
                         case 'a':
-                            printf("entrei\n");
                             if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWUSR | S_IWGRP | S_IWOTH;
                             if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWUSR & ~S_IWGRP & ~S_IWOTH;
                             break;
@@ -110,15 +109,12 @@ struct stat processOCTALMODE(int argc, char* argv[]) { //U G O     //r w x
             case '1': //001
                 switch(i) {
                     case 1:
-                        printf("entrei1");
                         stat_buf.st_mode = stat_buf.st_mode | S_IXUSR;
                         break;
                     case 2:
-                        printf("entrei2");
                         stat_buf.st_mode = stat_buf.st_mode | S_IXGRP;
                         break;
                     case 3:
-                        printf("entrei3");
                         stat_buf.st_mode = stat_buf.st_mode | S_IXOTH;
                         break;
                 }

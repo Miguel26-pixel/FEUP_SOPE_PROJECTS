@@ -7,15 +7,6 @@
 #include "permissions.h"
 #include "options.h"
 
-int oct(mode_t num) {
-    int i;
-    char buffer[7], buffer2[4];
-    snprintf(buffer, 8, "%o", num);
-    for(i = 0; i < strlen(buffer2); i++)
-        buffer2[i] = buffer[i + 2];
-    return strtol(buffer2, NULL, 10);
-}
-
 int main(int argc, char* argv[], char* envp[]) {
     if (argc < 3) { //without OPTIONS
         printf("usage: xmod [OPTIONS] MODE FILE/DIR\n");
@@ -34,21 +25,12 @@ int main(int argc, char* argv[], char* envp[]) {
         return 1;
     }
 
-    
-
-    
-    if (changePermissions(argv[argc-1],after_buf)) 
-        printf("Succeed");
-    else printf("Can't change Permissions!");
+    if (!changePermissions(argv[argc-1],after_buf)) 
+        printf("Can't change Permissions!");
 
     lstat(argv[argc - 1], &after_buf);
 
     processOPTIONSvc(before_buf,after_buf,argc,argv);
-
-    printf("before: %d ; after: %d ;\n",before_buf.st_mode, after_buf.st_mode);
-
-    if (before_buf.st_mode == after_buf.st_mode)
-        printf("Nothing was changed\n");
 
     return 0;
 }
