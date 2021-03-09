@@ -1,3 +1,4 @@
+#include "utils.h"
 int convertDecimalToOctal(int decimalNumber)
 {
     int octalNumber = 0, i = 1;
@@ -10,4 +11,10 @@ int convertDecimalToOctal(int decimalNumber)
     }
 
     return octalNumber;
+}
+
+
+void init_clock(){
+    start = times(buf);
+    ticks = sysconf(_SC_CLK_TCK);
 }

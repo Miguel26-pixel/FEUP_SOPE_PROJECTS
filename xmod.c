@@ -5,14 +5,18 @@
 #include <string.h>
 #include <stdbool.h>
 #include "permissions.h"
+#include "register.h"
 #include "options.h"
+
+struct tms *buf;
+clock_t start, end, mid;
+long ticks;
 
 int main(int argc, char* argv[], char* envp[]) {
     if (argc < 3) { //without OPTIONS
         printf("usage: xmod [OPTIONS] MODE FILE/DIR\n");
         return 0;
     }
-
     struct stat after_buf,before_buf;
 
     lstat(argv[argc - 1], &before_buf);
@@ -31,6 +35,9 @@ int main(int argc, char* argv[], char* envp[]) {
     lstat(argv[argc - 1], &after_buf);
 
     processOPTIONSvc(before_buf,after_buf,argc,argv);
+
+
+    //mke_register(PROC_EXIT,  getpid(), envp, argv, argc, after_buf,before_buf);
 
     return 0;
 }
