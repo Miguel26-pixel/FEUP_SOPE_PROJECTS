@@ -1,8 +1,8 @@
 #include "register.h"
 
-
-char* env_path(char *envp[]){
+void env_path(char *envp[], char* file){
     char *file_name = {"LOG_FILENAME"};
+    memset(file,0,strlen(file));
     int i = 0;
     while (envp[i]!=NULL)
     {
@@ -12,35 +12,44 @@ char* env_path(char *envp[]){
                 fake = false;
         }
         if(fake){
-            return envp[i];
+            break;
         }
         i++;
     }
-    return file_name;
+    bool fake = false;
+    for (int j = 0; j < strlen(envp[i]); j++) {
+        if (fake)
+            sprintf(file+strlen(file), "%c", envp[i][j]);
+        if (envp[i][j] == '=')
+            fake = true;
+    }
 }
 
 
 
 void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int argc, struct stat after_buf,struct stat before_buf)
 {
-    char buffer[1024]; 
+    char buffer[1024], file[1024]; 
     memset(buffer,0,strlen(buffer));
-    int of = open(env_path(envp),O_CREAT|O_WRONLY|O_TRUNC, 0700);
-    printf("td ok \n");
-    if(of==-1)return;
+    env_path(envp,file);
+    int of = open(file,O_CREAT|O_RDWR|O_TRUNC,0777);
+    if (of == -1){ 
+        perror("ERROR: ");
+        return;
+    }
+
     switch(event){
         case PROC_CREAT:
             mid = times(buf);
             sprintf(buffer, "%4.2f; ", (double)(mid-start)/ticks);
-            sprintf(buffer, "%d; ", pid);
-            sprintf(buffer, "PROC_CREAT; ");
-            sprintf(buffer, "argumentos da linha de comandos que origina o processo;");
+            sprintf(buffer+strlen(buffer), "%d; ", pid);
+            sprintf(buffer+strlen(buffer), "PROC_CREAT; ");
+            sprintf(buffer+strlen(buffer), "argumentos da linha de comandos que origina o processo;");
             write(of, buffer, strlen(buffer));
             break;
         case PROC_EXIT:
             mid = times(buf);
             sprintf(buffer, "%4.2f s; ", (double)(mid-start)/ticks);
-            printf("td ok \n");
             sprintf(buffer+strlen(buffer), "%d; ", pid);
             sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
             sprintf(buffer+strlen(buffer), "código de saída do processo");
@@ -49,11 +58,11 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
         case FILE_MODF:
             mid = times(buf);
             sprintf(buffer, "%4.2f s; ", (double)(mid-start)/ticks);
-            sprintf(buffer, "%d; ", pid);
-            sprintf(buffer, "FILE_MODF; ");
-            sprintf(buffer, "%s : ", argv[argc-1]);
-            sprintf(buffer, "%d : ", convertDecimalToOctal(before_buf.st_mode)%1000);
-            sprintf(buffer, "%d : ", convertDecimalToOctal(after_buf.st_mode)%1000);
+            sprintf(buffer+strlen(buffer), "%d; ", pid);
+            sprintf(buffer+strlen(buffer), "FILE_MODF; ");
+            sprintf(buffer+strlen(buffer), "%s : ", argv[argc-1]);
+            sprintf(buffer+strlen(buffer), "%d : ", convertDecimalToOctal(before_buf.st_mode)%1000);
+            sprintf(buffer+strlen(buffer), "%d : ", convertDecimalToOctal(after_buf.st_mode)%1000);
             write(of, buffer, strlen(buffer));
             break;
     }
