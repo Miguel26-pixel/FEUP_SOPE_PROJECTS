@@ -41,9 +41,9 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
             mid = times(buf);
             sprintf(buffer, "%4.2f s; ", (double)(mid-start)/ticks);
             printf("td ok \n");
-            sprintf(buffer, "%d; ", pid);
-            sprintf(buffer, "PROC_EXIT; ");
-            sprintf(buffer, "código de saída do processo");
+            sprintf(buffer+strlen(buffer), "%d; ", pid);
+            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
+            sprintf(buffer+strlen(buffer), "código de saída do processo");
             write(of, buffer, strlen(buffer));
             break;
         case FILE_MODF:
