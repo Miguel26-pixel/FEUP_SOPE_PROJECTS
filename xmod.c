@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <stdbool.h>
+#include "utils.h"
 #include "permissions.h"
 #include "register.h"
 #include "options.h"
@@ -18,6 +19,8 @@ int main(int argc, char* argv[], char* envp[]) {
         return 0;
     }
     struct stat after_buf,before_buf;
+
+    init_clock();
 
     lstat(argv[argc - 1], &before_buf);
 
@@ -37,7 +40,7 @@ int main(int argc, char* argv[], char* envp[]) {
     processOPTIONSvc(before_buf,after_buf,argc,argv);
 
 
-    //mke_register(PROC_EXIT,  getpid(), envp, argv, argc, after_buf,before_buf);
+    mke_register(PROC_EXIT,  getpid(), envp, argv, argc, after_buf,before_buf);
 
     return 0;
 }
