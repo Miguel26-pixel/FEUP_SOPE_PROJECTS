@@ -19,3 +19,5 @@ extern long ticks;
 void env_path(char *envp[], char* file);
 
 void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int argc, struct stat after_buf,struct stat before_buf);
+
+void init_file(char *envp[]);

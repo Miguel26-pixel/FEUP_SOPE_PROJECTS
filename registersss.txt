@@ -1,1 +1,2 @@
-0.00 s; 33110; PROC_EXIT; código de saída do processo
+0.00000 sec; 53446; FILE_MODF; /home/mim/Documents/FEUP/2ano/Cadeiras/2Semestre/SOPE/FEUP_SOPE_PROJECTS/dirTest/. : 0777 : 0777;
+0.00000 sec; 53446; PROC_EXIT; código de saída do processo

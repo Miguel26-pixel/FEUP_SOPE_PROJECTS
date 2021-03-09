@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h> //int chmod(const char *pathname, mode_t mode);
+#include <sys/stat.h>
 #include <dirent.h>
 #include <string.h>
 #include <stdbool.h>
@@ -8,6 +8,7 @@
 #include "permissions.h"
 #include "register.h"
 #include "options.h"
+#include "files.h"
 
 struct tms *buf;
 clock_t start, end, mid;
@@ -18,31 +19,12 @@ int main(int argc, char* argv[], char* envp[]) {
         printf("usage: xmod [OPTIONS] MODE FILE/DIR\n");
         return 0;
     }
-    struct stat after_buf,before_buf;
 
     init_clock();
 
-    lstat(argv[argc - 1], &before_buf);
-
-    if (argv[argc-2][0] == '0') after_buf = processOCTALMODE(argc,argv);
-    else after_buf = processMODE(argc,argv);
-
-    if (after_buf.st_mode == -1){
-        printf("ERROR: can't change permissions");
-        return 1;
-    }
-
-    if (!changePermissions(argv[argc-1],after_buf)) 
-        printf("Can't change Permissions!");
-
-    lstat(argv[argc - 1], &after_buf);
-
-    processOPTIONSvc(before_buf,after_buf,argc,argv);
-
-
-    mke_register(PROC_EXIT,  getpid(), envp, argv, argc, after_buf,before_buf);
-
-    return 0;
+    if (!checkR(argc,argv))
+        return processSingle(argc, argv, envp);
+    else return processR(argc, argv, envp);
 }
 
 //#define S_IRWXU 0000700 // RWX mask for owner 

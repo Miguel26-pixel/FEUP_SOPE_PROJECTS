@@ -49,3 +49,9 @@ void printPermissions(struct stat fileStat) {
     printf( (fileStat.st_mode & S_IWOTH) ? "w" : "-");
     printf( (fileStat.st_mode & S_IXOTH) ? "x" : "-");
 }
+
+bool checkR(int argc, char* argv[]) {
+    for (int i = 0; i < argc; i++)
+        if (!strcmp(argv[i], "-R")) return true;
+    return false;
+}
