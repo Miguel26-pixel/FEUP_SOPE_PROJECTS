@@ -56,7 +56,7 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
             sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
             sprintf(buffer+strlen(buffer), "%d; ", pid);
             sprintf(buffer+strlen(buffer), "PROC_CREAT; ");
-            sprintf(buffer+strlen(buffer), "argumentos da linha de comandos que origina o processo;");
+            sprintf(buffer+strlen(buffer), "argumentos da linha de comandos que origina o processo;\n");
             write(of, buffer, strlen(buffer));
             break;
         case PROC_EXIT:
@@ -64,7 +64,7 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
             sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
             sprintf(buffer+strlen(buffer), "%d; ", pid);
             sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
-            sprintf(buffer+strlen(buffer), "código de saída do processo");
+            sprintf(buffer+strlen(buffer), "código de saída do processo\n");
             write(of, buffer, strlen(buffer));
             break;
         case FILE_MODF:

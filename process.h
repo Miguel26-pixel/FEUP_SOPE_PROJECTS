@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h> //int chmod(const char *pathname, mode_t mode);
+#include <sys/wait.h>
 #include <dirent.h>
 #include <string.h>
 #include <stdbool.h>

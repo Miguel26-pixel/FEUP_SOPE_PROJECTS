@@ -8,7 +8,7 @@
 #include "permissions.h"
 #include "register.h"
 #include "options.h"
-#include "files.h"
+#include "process.h"
 
 struct tms *buf;
 clock_t start, end, mid;
@@ -21,6 +21,8 @@ int main(int argc, char* argv[], char* envp[]) {
     }
 
     init_clock();
+
+    init_file(envp);
 
     if (!checkR(argc,argv))
         return processSingle(argc, argv, envp);
