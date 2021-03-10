@@ -29,7 +29,6 @@ int processSingle(int argc, char* argv[], char* envp[]){
 
 
 int processR(int argc, char* argv[], char* envp[]) {
-    printf("ENTREI R\n");
 
     DIR *dir;
     char* path = argv[argc - 1];
@@ -51,7 +50,6 @@ int processR(int argc, char* argv[], char* envp[]) {
         }
         strcat(argv[argc - 1], direntp->d_name);
         lstat(argv[argc - 1], &stat_buf); 
-        printf("file: %s - st_mode = %d\n",direntp->d_name, stat_buf.st_mode);
         if (!S_ISDIR(stat_buf.st_mode))
             processSingle(argc, argv, envp);
     }
@@ -67,7 +65,6 @@ int processR(int argc, char* argv[], char* envp[]) {
 
     while((direntp = readdir(dir)) != NULL) {
         if (!strcmp(direntp->d_name, "..")) continue;
-        if (!strcmp(direntp->d_name, ".")) continue;
         for (int i = strlen(argv[argc - 1]) - 1; i > 0; i--) {
             if (argv[argc - 1][i] == '/')
                 break;
@@ -76,23 +73,23 @@ int processR(int argc, char* argv[], char* envp[]) {
         strcat(argv[argc - 1], direntp->d_name);
         lstat(argv[argc - 1], &stat_buf); 
         if (S_ISDIR(stat_buf.st_mode)) {
+
             int id = fork();
-            if (id == 0 && strcmp(direntp->d_name, ".") != 0) {
-                
+            char** new_argv = malloc((argc+1) * sizeof *new_argv);
+            for(int i = 0; i < argc; ++i)
+            {
+                size_t length = strlen(argv[i])+1;
+                new_argv[i] = malloc(length);
+                memcpy(new_argv[i], argv[i], length);
+            }
+            new_argv[argc] = NULL;
+            strcat(new_argv[argc - 1], "/");
 
-
-                char** new_argv = malloc((argc+1) * sizeof *new_argv);
-                for(int i = 0; i < argc; ++i)
-                {
-                    size_t length = strlen(argv[i])+1;
-                    new_argv[i] = malloc(length);
-                    memcpy(new_argv[i], argv[i], length);
-                }
-                new_argv[argc] = NULL;
-
-
-                strcat(new_argv[argc - 1], "/");
+            if (id == 0 && strcmp(direntp->d_name, ".") != 0) {   
                 processR(argc, new_argv, envp);
+            }
+            else if (id == 0 && strcmp(direntp->d_name, ".") == 0) {
+                processSingle(argc, new_argv, envp);
             }
             else waitpid(id,&status,0);
         }
