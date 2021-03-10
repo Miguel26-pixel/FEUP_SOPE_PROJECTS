@@ -50,7 +50,7 @@ int processR(int argc, char* argv[], char* envp[]) {
             argv[argc - 1][i] = '\0';
         }
         strcat(argv[argc - 1], direntp->d_name);
-        lstat(direntp->d_name, &stat_buf); 
+        lstat(argv[argc - 1], &stat_buf); 
         printf("file: %s - st_mode = %d\n",direntp->d_name, stat_buf.st_mode);
         if (!S_ISDIR(stat_buf.st_mode))
             processSingle(argc, argv, envp);
@@ -74,14 +74,27 @@ int processR(int argc, char* argv[], char* envp[]) {
             argv[argc - 1][i] = '\0';
         }
         strcat(argv[argc - 1], direntp->d_name);
-        lstat(direntp->d_name, &stat_buf); 
-        printf("file: %s - st_mode = %d\n",direntp->d_name, stat_buf.st_mode);
+        lstat(argv[argc - 1], &stat_buf); 
         if (S_ISDIR(stat_buf.st_mode)) {
-            /*int id = fork();
-            if (id == 0 && strcmp(direntp->d_name, ".") != 0)
-                processR(argc, argv, envp);
-            else waitpid(id,&status,WNOHANG);*/
-            printf("dir: %s\n",direntp->d_name);
+            int id = fork();
+            if (id == 0 && strcmp(direntp->d_name, ".") != 0) {
+                
+
+
+                char** new_argv = malloc((argc+1) * sizeof *new_argv);
+                for(int i = 0; i < argc; ++i)
+                {
+                    size_t length = strlen(argv[i])+1;
+                    new_argv[i] = malloc(length);
+                    memcpy(new_argv[i], argv[i], length);
+                }
+                new_argv[argc] = NULL;
+
+
+                strcat(new_argv[argc - 1], "/");
+                processR(argc, new_argv, envp);
+            }
+            else waitpid(id,&status,0);
         }
     }
     return 0;
