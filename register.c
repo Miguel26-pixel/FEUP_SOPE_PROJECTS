@@ -1,6 +1,7 @@
 #include "register.h"
 
 extern unsigned nfmod;
+extern current_pid;
 
 void env_path(char *envp[], char* file){
     char *file_name = {"LOG_FILENAME"};
@@ -67,6 +68,23 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
             sprintf(buffer+strlen(buffer), "%d; ", pid);
             sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
             sprintf(buffer+strlen(buffer), "código de saída do processo\n");
+            write(of, buffer, strlen(buffer));
+            break;
+        case SIGNAL_RECV:
+            mid = times(buf);
+            sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
+            sprintf(buffer+strlen(buffer), "%d; ", pid);
+            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
+            sprintf(buffer+strlen(buffer), "%d", SIGINT);
+            write(of, buffer, strlen(buffer));
+            break;
+        case SIGNAL_SENT:
+            mid = times(buf);
+            sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
+            sprintf(buffer+strlen(buffer), "%d; ", pid);
+            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
+            sprintf(buffer+strlen(buffer), "%d :", SIGINT);
+            sprintf(buffer+strlen(buffer), "%d :", SIGINT);
             write(of, buffer, strlen(buffer));
             break;
         case FILE_MODF:
