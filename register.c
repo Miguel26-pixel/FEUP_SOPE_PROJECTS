@@ -84,7 +84,7 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
             sprintf(buffer+strlen(buffer), "%d; ", pid);
             sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
             sprintf(buffer+strlen(buffer), "%d :", SIGINT);
-            sprintf(buffer+strlen(buffer), "%d :", SIGINT);
+            sprintf(buffer+strlen(buffer), "%d", current_pid);
             write(of, buffer, strlen(buffer));
             break;
         case FILE_MODF:
