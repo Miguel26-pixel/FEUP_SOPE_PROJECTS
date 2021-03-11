@@ -1,5 +1,7 @@
 #include "register.h"
 
+extern unsigned nfmod;
+
 void env_path(char *envp[], char* file){
     char *file_name = {"LOG_FILENAME"};
     memset(file,0,strlen(file));
@@ -76,6 +78,7 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
             sprintf(buffer+strlen(buffer), "0%d : ", convertDecimalToOctal(before_buf.st_mode)%1000);
             sprintf(buffer+strlen(buffer), "0%d;\n", convertDecimalToOctal(after_buf.st_mode)%1000);
             write(of, buffer, strlen(buffer));
+            nfmod++;
             break;
     }
     close(of);

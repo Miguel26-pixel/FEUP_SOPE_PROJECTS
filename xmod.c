@@ -9,6 +9,7 @@
 #include "register.h"
 #include "options.h"
 #include "process.h"
+#include "signals.h"
 
 struct tms *buf;
 clock_t start, end, mid;
@@ -23,6 +24,8 @@ int main(int argc, char* argv[], char* envp[]) {
     init_clock();
 
     init_file(envp);
+    getFichDir(argv[argc-1]);
+    signal(SIGINT, sigHandler);
 
     if (!checkR(argc,argv))
         return processSingle(argc, argv, envp);
