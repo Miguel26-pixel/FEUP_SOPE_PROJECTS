@@ -25,54 +25,42 @@ int processSingle(int argc, char* argv[], char* envp[]){
     mke_register(PROC_EXIT,  getpid(), envp, argv, argc, after_buf,before_buf);
 
     return 0;
- }
+}
 
 
 int processR(int argc, char* argv[], char* envp[]) {
-
     DIR *dir;
     char* path = argv[argc - 1];
     struct dirent* direntp;
     struct stat stat_buf;
     int status;
 
-    if ((dir = opendir(argv[argc - 1])) == NULL) {
-         perror("ERROR1");
-         return 1;
+    processSingle(argc,argv,envp);
+
+    if ((dir = opendir(argv[argc - 1])) == NULL)
+        return 0;
+
+    if (argv[argc - 1][strlen(argv[argc - 1]) - 1] != '/') {
+        argv[argc - 1][strlen(argv[argc - 1]) + 1] = '\0';
+        argv[argc - 1][strlen(argv[argc - 1])] = '/';
     }
 
-    while((direntp = readdir(dir)) != NULL) {
-        //if (!strcmp(direntp->d_name, "..")) continue;
+     while((direntp = readdir(dir)) != NULL) {
+        if (!strcmp(direntp->d_name, "..")) continue;
+        if (!strcmp(direntp->d_name, ".")) continue;
         for (int i = strlen(argv[argc - 1]) - 1; i > 0; i--) {
             if (argv[argc - 1][i] == '/')
                 break;
             argv[argc - 1][i] = '\0';
         }
+
         strcat(argv[argc - 1], direntp->d_name);
         lstat(argv[argc - 1], &stat_buf); 
+
         if (!S_ISDIR(stat_buf.st_mode))
             processSingle(argc, argv, envp);
-    }
-    if (closedir(dir) < 0)
-        perror("ERROR2");
 
-    argv[argc - 1] = path;
-
-    if ((dir = opendir(argv[argc - 1])) == NULL) {
-         perror("ERROR3");
-         return 1;
-    }
-
-    while((direntp = readdir(dir)) != NULL) {
-        if (!strcmp(direntp->d_name, "..")) continue;
-        for (int i = strlen(argv[argc - 1]) - 1; i > 0; i--) {
-            if (argv[argc - 1][i] == '/')
-                break;
-            argv[argc - 1][i] = '\0';
-        }
-        strcat(argv[argc - 1], direntp->d_name);
-        lstat(argv[argc - 1], &stat_buf); 
-        if (S_ISDIR(stat_buf.st_mode)) {
+        else if (S_ISDIR(stat_buf.st_mode)) {
 
             int id = fork();
             char** new_argv = malloc((argc+1) * sizeof *new_argv);
@@ -94,5 +82,9 @@ int processR(int argc, char* argv[], char* envp[]) {
             else waitpid(id,&status,0);
         }
     }
+
+    if (closedir(dir) < 0)
+        perror("ERROR2");
+
     return 0;
 }

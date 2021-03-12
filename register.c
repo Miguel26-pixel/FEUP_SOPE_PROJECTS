@@ -4,9 +4,10 @@ void env_path(char *envp[], char* file){
     char *file_name = {"LOG_FILENAME"};
     memset(file,0,strlen(file));
     int i = 0;
+    bool fake = true;
     while (envp[i]!=NULL)
     {
-        bool fake = true;
+        fake = true;
         for(int x = 0; x<strlen(file_name);x++){
             if(file_name[x]!=envp[i][x])
                 fake = false;
@@ -16,7 +17,11 @@ void env_path(char *envp[], char* file){
         }
         i++;
     }
-    bool fake = false;
+    if (fake == false) {
+        printf("LOG_FILENAME doesn't exist.\n");
+        exit(1);
+    }
+    fake = false;
     for (int j = 0; j < strlen(envp[i]); j++) {
         if (fake)
             sprintf(file+strlen(file), "%c", envp[i][j]);
