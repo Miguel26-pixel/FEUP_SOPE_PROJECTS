@@ -8,7 +8,6 @@ int current_pid = 0;
 
 void getFichDir(char *fichDir){
         path = fichDir;
-
 }
 
 
@@ -28,6 +27,6 @@ void sigHandler(int sig)
         exit(0);
     signal(SIGINT, sigHandler); // reinstall handler
     signal_sent = true;
-    current_id = getpid();
+    current_pid = getpid();
     return;
 }

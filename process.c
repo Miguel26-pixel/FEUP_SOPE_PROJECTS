@@ -30,7 +30,6 @@ int processSingle(int argc, char* argv[], char* envp[]){
 
 int processR(int argc, char* argv[], char* envp[]) {
     DIR *dir;
-    char* path = argv[argc - 1];
     struct dirent* direntp;
     struct stat stat_buf;
     int status;

@@ -24,7 +24,9 @@ int main(int argc, char* argv[], char* envp[]) {
     init_clock();
 
     init_file(envp);
+
     getFichDir(argv[argc-1]);
+    
     signal(SIGINT, sigHandler);
 
     if (!checkR(argc,argv))

@@ -1,7 +1,7 @@
 #include "register.h"
 
 extern unsigned nfmod;
-extern current_pid;
+extern int current_pid;
 
 void env_path(char *envp[], char* file){
     char *file_name = {"LOG_FILENAME"};
