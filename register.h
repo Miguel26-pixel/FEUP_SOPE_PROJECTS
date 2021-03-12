@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "utils.h"
+#include "signal.h"
 
 enum event{PROC_CREAT, PROC_EXIT, SIGNAL_RECV, SIGNAL_SENT, FILE_MODF};
 
