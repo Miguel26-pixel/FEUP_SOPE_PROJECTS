@@ -19,6 +19,7 @@ void sigcontHandler(int sig) {
 
 void sigHandler(int sig) {
     mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
+    printf("td ok");
     mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
     cont = false;
     if (getpid() == pid) {

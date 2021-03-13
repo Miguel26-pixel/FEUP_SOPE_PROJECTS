@@ -17,7 +17,7 @@ enum event{PROC_CREAT, PROC_EXIT, SIGNAL_RECV, SIGNAL_SENT, FILE_MODF};
 extern struct tms *buf;
 extern clock_t start,mid,end;
 extern long ticks;
-char file[1024];
+
 
 void env_path(char *envp[]);
 

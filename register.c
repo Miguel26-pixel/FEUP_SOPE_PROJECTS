@@ -1,4 +1,5 @@
 #include "register.h"
+char file[1024];
 
 extern unsigned nfmod;
 extern int current_pid;
