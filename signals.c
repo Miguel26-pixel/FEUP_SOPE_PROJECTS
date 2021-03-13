@@ -13,12 +13,14 @@ void getFichDir(char *fichDir){
 }
 
 void sigcontHandler(int sig) {
+    //signal continuar
     cont = true;
 }
 
 
-void sigHandler(int sig)
-{
+void sigHandler(int sig) {
+    //send Ctrl-C
+    //signal CTrl-C
     cont = false;
     if (getpid() == pid) {
         char answer;
@@ -29,6 +31,7 @@ void sigHandler(int sig)
         scanf(" %c", &answer);
         if (answer == 'y') {
             paused = false;
+            //send signal to child
             kill(0, SIGCONT);
             cont = true;
         }
