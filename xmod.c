@@ -14,6 +14,7 @@
 struct tms *buf;
 clock_t start, end, mid;
 long ticks;
+pid_t pid;
 
 int main(int argc, char* argv[], char* envp[]) {
     if (argc < 3) { //without OPTIONS
@@ -26,6 +27,8 @@ int main(int argc, char* argv[], char* envp[]) {
     init_file(envp);
 
     getFichDir(argv[argc-1]);
+
+    pid = getpid();
     
     signal(SIGINT, sigHandler);
 

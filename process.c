@@ -45,6 +45,8 @@ int processR(int argc, char* argv[], char* envp[]) {
     }
 
      while((direntp = readdir(dir)) != NULL) {
+            //sleep(2);
+
         if (!strcmp(direntp->d_name, "..")) continue;
         if (!strcmp(direntp->d_name, ".")) continue;
         for (int i = strlen(argv[argc - 1]) - 1; i > 0; i--) {
@@ -60,7 +62,6 @@ int processR(int argc, char* argv[], char* envp[]) {
             processSingle(argc, argv, envp);
 
         else if (S_ISDIR(stat_buf.st_mode)) {
-
             int id = fork();
             char** new_argv = malloc((argc+1) * sizeof *new_argv);
             for(int i = 0; i < argc; ++i)
@@ -73,6 +74,7 @@ int processR(int argc, char* argv[], char* envp[]) {
             strcat(new_argv[argc - 1], "/");
 
             if (id == 0 && strcmp(direntp->d_name, ".") != 0) {   
+                sleep(2);
                 processR(argc, new_argv, envp);
             }
             else if (id == 0 && strcmp(direntp->d_name, ".") == 0) {
