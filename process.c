@@ -20,9 +20,9 @@ int processSingle(int argc, char* argv[], char* envp[]){
 
     processOPTIONSvc(before_buf,after_buf,argc,argv);
 
-    mke_register(FILE_MODF,  getpid(), envp, argv, argc, after_buf,before_buf);
+    mke_register_wout_signal(FILE_MODF,  getpid(), envp, argv, argc, after_buf,before_buf);
 
-    mke_register(PROC_EXIT,  getpid(), envp, argv, argc, after_buf,before_buf);
+    mke_register_wout_signal(PROC_EXIT,  getpid(), envp, argv, argc, after_buf,before_buf);
 
     return 0;
 }

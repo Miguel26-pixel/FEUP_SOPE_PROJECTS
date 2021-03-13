@@ -3,7 +3,7 @@
 extern unsigned nfmod;
 extern int current_pid;
 
-void env_path(char *envp[], char* file){
+void env_path(char *envp[]){
     char *file_name = {"LOG_FILENAME"};
     memset(file,0,strlen(file));
     int i = 0;
@@ -34,9 +34,8 @@ void env_path(char *envp[], char* file){
 }
 
 void init_file(char *envp[]) {
-    char file[1024];
     memset(file,0,strlen(file));
-    env_path(envp,file);
+    env_path(envp);
     int of = open(file,O_CREAT|O_RDWR|O_TRUNC,0777);
     if (of == -1){ 
         perror("ERROR: ");
@@ -47,12 +46,10 @@ void init_file(char *envp[]) {
 
 
 
-void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int argc, struct stat after_buf,struct stat before_buf)
+void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* argv[], int argc, struct stat after_buf,struct stat before_buf)
 {
-    char buffer[1024], file[1024]; 
-    memset(file,0,strlen(file));
+    char buffer[1024]; 
     memset(buffer,0,strlen(buffer));
-    env_path(envp,file);
     int of = open(file,O_CREAT|O_RDWR|O_APPEND,0777);
     if (of == -1){ 
         perror("ERROR: ");
@@ -75,23 +72,6 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
             sprintf(buffer+strlen(buffer), "código de saída do processo\n");
             write(of, buffer, strlen(buffer));
             break;
-        case SIGNAL_RECV:
-            mid = times(buf);
-            sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
-            sprintf(buffer+strlen(buffer), "%d; ", pid);
-            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
-            sprintf(buffer+strlen(buffer), "%d", SIGINT);
-            write(of, buffer, strlen(buffer));
-            break;
-        case SIGNAL_SENT:
-            mid = times(buf);
-            sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
-            sprintf(buffer+strlen(buffer), "%d; ", pid);
-            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
-            sprintf(buffer+strlen(buffer), "%d :", SIGINT);
-            sprintf(buffer+strlen(buffer), "%d", current_pid);
-            write(of, buffer, strlen(buffer));
-            break;
         case FILE_MODF:
             mid = times(buf);
             sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
@@ -102,6 +82,37 @@ void mke_register(enum event event,  pid_t pid, char *envp[], char* argv[], int 
             sprintf(buffer+strlen(buffer), "0%d;\n", convertDecimalToOctal(after_buf.st_mode)%1000);
             write(of, buffer, strlen(buffer));
             nfmod++;
+            break;
+    }
+    close(of);
+}
+
+void mke_register_w_signal(enum event event,  pid_t pid, int signo)
+{
+    char buffer[1024]; 
+    memset(buffer,0,strlen(buffer));
+    int of = open(file,O_CREAT|O_RDWR|O_APPEND,0777);
+    if (of == -1){ 
+        perror("ERROR: ");
+        return;
+    }
+    switch(event){
+        case SIGNAL_RECV:
+            mid = times(buf);
+            sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
+            sprintf(buffer+strlen(buffer), "%d; ", pid);
+            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
+            sprintf(buffer+strlen(buffer), "%d", signo);
+            write(of, buffer, strlen(buffer));
+            break;
+        case SIGNAL_SENT:
+            mid = times(buf);
+            sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
+            sprintf(buffer+strlen(buffer), "%d; ", pid);
+            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
+            sprintf(buffer+strlen(buffer), "%d :", signo);
+            sprintf(buffer+strlen(buffer), "%d", current_pid);
+            write(of, buffer, strlen(buffer));
             break;
     }
     close(of);

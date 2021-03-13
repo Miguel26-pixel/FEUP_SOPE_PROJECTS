@@ -5,6 +5,8 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include "register.h"
+
 
 void getFichDir(char *fichDir);
 void sigHandler(int sig);

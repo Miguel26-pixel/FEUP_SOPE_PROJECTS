@@ -13,14 +13,13 @@ void getFichDir(char *fichDir){
 }
 
 void sigcontHandler(int sig) {
-    //signal continuar
+    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
     cont = true;
 }
 
-
 void sigHandler(int sig) {
-    //send Ctrl-C
-    //signal CTrl-C
+    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
+    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
     cont = false;
     if (getpid() == pid) {
         char answer;
@@ -31,7 +30,7 @@ void sigHandler(int sig) {
         scanf(" %c", &answer);
         if (answer == 'y') {
             paused = false;
-            //send signal to child
+            mke_register_w_signal(SIGNAL_SENT,  getpid(), SIGCONT);
             kill(0, SIGCONT);
             cont = true;
         }
