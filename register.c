@@ -2,10 +2,12 @@
 
 extern unsigned nfmod;
 extern int current_pid;
+char file1[1024];
+
 
 void env_path(char *envp[]){
     char *file_name = {"LOG_FILENAME"};
-    memset(file,0,strlen(file));
+    memset(file1,0,strlen(file1));
     int i = 0;
     bool fake = true;
     while (envp[i]!=NULL)
@@ -27,21 +29,22 @@ void env_path(char *envp[]){
     fake = false;
     for (int j = 0; j < strlen(envp[i]); j++) {
         if (fake)
-            sprintf(file+strlen(file), "%c", envp[i][j]);
+            sprintf(file1+strlen(file1), "%c", envp[i][j]);
         if (envp[i][j] == '=')
             fake = true;
     }
 }
 
 void init_file(char *envp[]) {
-    memset(file,0,strlen(file));
+    memset(file1,0,strlen(file1));
     env_path(envp);
-    int of = open(file,O_CREAT|O_RDWR|O_TRUNC,0777);
+    int of = open(file1,O_CREAT|O_RDWR|O_TRUNC,0777);
     if (of == -1){ 
         perror("ERROR: ");
         return;
     }
     close(of);
+    printf("%s\n",file1);
 }
 
 
@@ -50,7 +53,7 @@ void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* 
 {
     char buffer[1024]; 
     memset(buffer,0,strlen(buffer));
-    int of = open(file,O_CREAT|O_RDWR|O_APPEND,0777);
+    int of = open(file1,O_CREAT|O_RDWR|O_APPEND,0777);
     if (of == -1){ 
         perror("ERROR: ");
         return;
@@ -91,7 +94,7 @@ void mke_register_w_signal(enum event event,  pid_t pid, int signo)
 {
     char buffer[1024]; 
     memset(buffer,0,strlen(buffer));
-    int of = open(file,O_CREAT|O_RDWR|O_APPEND,0777);
+    int of = open(file1,O_CREAT|O_RDWR|O_APPEND,0777);
     if (of == -1){ 
         perror("ERROR: ");
         return;
