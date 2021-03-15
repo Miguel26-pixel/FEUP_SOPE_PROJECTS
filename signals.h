@@ -8,5 +8,5 @@
 #include "register.h"
 
 
-void getFichDir(char *fichDir);
+void getFichDir(const char *fichDir);
 void sigHandler(int sig);
