@@ -12,12 +12,19 @@ void getFichDir(const char *fichDir){
 }
 
 void sigcontHandler(int sig) {
+    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
     mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
 }
 
+void sigkillHandler(int sig) {
+    printf("td ok");
+    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
+    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
+    exit(0);
+} 
+
 void sigHandler(int sig) {
     mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
-    printf("td ok");
     mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
     if (getpid() == pid) {
         char answer;
@@ -27,18 +34,22 @@ void sigHandler(int sig) {
         printf("\nWould you like to continue? Enter y or n: ");
         scanf(" %c", &answer);
         if (answer == 'y') {
-            mke_register_w_signal(SIGNAL_SENT,  getpid(), SIGCONT);
+            current_pid = getpid();
+            printf("%d",current_pid);
+            //mke_register_w_signal(SIGNAL_SENT,  getpid(), SIGCONT);
             kill(0, SIGCONT);
         }
-        else
+        else{
+            kill(0, SIGTERM);
             exit(0);
+        }
         signal(SIGINT, sigHandler);
         signal_sent = true;
-        current_pid = getpid();
         return;
     }
     else {
         signal(SIGCONT, sigcontHandler);
+        signal(SIGKILL, sigkillHandler);
         pause();
     }
 }

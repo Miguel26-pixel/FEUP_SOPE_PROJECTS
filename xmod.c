@@ -15,6 +15,8 @@ struct tms *buf;
 clock_t start, end, mid;
 long ticks;
 pid_t pid;
+extern int current_pid;
+extern bool signal_sent;
 
 int main(int argc, char* argv[], char* envp[]) {
     if (argc < 3) { //without OPTIONS
@@ -31,6 +33,8 @@ int main(int argc, char* argv[], char* envp[]) {
     pid = getpid();
     
     signal(SIGINT, sigHandler);
+    signal_sent = true;
+    current_pid = getpid();
 
     if (!checkR(argc,argv))
         return processSingle(argc, argv, envp);

@@ -9,4 +9,6 @@
 
 
 void getFichDir(const char *fichDir);
+void sigkillHandler(int sig);
+void sigcontHandler(int sig);
 void sigHandler(int sig);
