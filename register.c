@@ -85,6 +85,8 @@ void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* 
             sprintf(buffer+strlen(buffer), "0%d;\n", convertDecimalToOctal(after_buf.st_mode)%1000);
             write(of, buffer, strlen(buffer));
             break;
+        default: 
+            break;
     }
     close(of);
 }
@@ -103,18 +105,20 @@ void mke_register_w_signal(enum event event,  pid_t pid, int signo)
             mid = times(buf);
             sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
             sprintf(buffer+strlen(buffer), "%d; ", pid);
-            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
-            sprintf(buffer+strlen(buffer), "%d", signo);
+            sprintf(buffer+strlen(buffer), "SIGNAL_RECV; ");
+            sprintf(buffer+strlen(buffer), "%d\n", signo);
             write(of, buffer, strlen(buffer));
             break;
         case SIGNAL_SENT:
             mid = times(buf);
             sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
-            sprintf(buffer+strlen(buffer), "%d; ", pid);
-            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
-            sprintf(buffer+strlen(buffer), "%d :", signo);
-            sprintf(buffer+strlen(buffer), "%d", current_pid);
+            sprintf(buffer+strlen(buffer), "%d; ", current_pid);
+            sprintf(buffer+strlen(buffer), "SIGNAL_SENT; ");
+            sprintf(buffer+strlen(buffer), "%d : ", signo);
+            sprintf(buffer+strlen(buffer), "%d\n", pid);
             write(of, buffer, strlen(buffer));
+            break;
+        default:
             break;
     }
     close(of);

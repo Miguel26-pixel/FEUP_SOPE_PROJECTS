@@ -1,5 +1,8 @@
  #include "process.h"
 
+extern int current_pid;
+extern bool signal_sent;
+
 int processSingle(int argc, char* argv[], char* envp[]){
     struct stat after_buf,before_buf;
 
