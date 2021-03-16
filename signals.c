@@ -1,12 +1,12 @@
 #include "signals.h"
 
 unsigned nftot = 0, nfmod = 0;
-bool paused = false;
+//bool paused = false;
 bool signal_sent = false;
 char* path;
 int current_pid = 0;
 extern pid_t pid;
-bool cont = false;
+//bool cont = false;
 
 void getFichDir(char *fichDir){
         path = fichDir;
@@ -14,14 +14,14 @@ void getFichDir(char *fichDir){
 
 void sigcontHandler(int sig) {
     mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
-    cont = true;
+    //cont = true;
 }
 
 void sigHandler(int sig) {
     mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
     printf("td ok");
     mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
-    cont = false;
+    //cont = false;
     if (getpid() == pid) {
         char answer;
         printf("\n Programmed paused...\n");
@@ -30,10 +30,10 @@ void sigHandler(int sig) {
         printf("\nWould you like to continue? Enter y or n: ");
         scanf(" %c", &answer);
         if (answer == 'y') {
-            paused = false;
+            //paused = false;
             mke_register_w_signal(SIGNAL_SENT,  getpid(), SIGCONT);
             kill(0, SIGCONT);
-            cont = true;
+            //cont = true;
         }
         else
             exit(0);

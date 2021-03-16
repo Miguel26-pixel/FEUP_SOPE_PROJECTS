@@ -1,7 +1,6 @@
 #include "register.h"
 char file[1024];
 
-extern unsigned nfmod;
 extern int current_pid;
 char file1[1024];
 
@@ -85,7 +84,6 @@ void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* 
             sprintf(buffer+strlen(buffer), "0%d : ", convertDecimalToOctal(before_buf.st_mode)%1000);
             sprintf(buffer+strlen(buffer), "0%d;\n", convertDecimalToOctal(after_buf.st_mode)%1000);
             write(of, buffer, strlen(buffer));
-            nfmod++;
             break;
     }
     close(of);

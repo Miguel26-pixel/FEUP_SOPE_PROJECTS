@@ -19,7 +19,6 @@ extern struct tms *buf;
 extern clock_t start,mid,end;
 extern long ticks;
 
-
 void env_path(char *envp[]);
 
 void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* argv[], int argc, struct stat after_buf,struct stat before_buf);
