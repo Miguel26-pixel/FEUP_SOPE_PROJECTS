@@ -2,6 +2,7 @@
 
 extern int current_pid;
 extern bool signal_sent;
+extern pid_t pid;
 
 int processSingle(int argc, char* argv[], char* envp[]){
     struct stat after_buf,before_buf;
@@ -58,12 +59,23 @@ int processR(int argc, char* argv[], char* envp[]) {
         }
 
         strcat(argv[argc - 1], direntp->d_name);
-        lstat(argv[argc - 1], &stat_buf); 
+        if (lstat(argv[argc - 1], &stat_buf) != 0) {
+            printf("%s\n", argv[argc - 1]);
+            perror("Error:"); //a)
+        }
 
-        if (!S_ISDIR(stat_buf.st_mode))
+
+        if (S_ISLNK(stat_buf.st_mode)) {
+            if (checkV(argc,argv))
+                printf("neither symbolic link %s nor referent has been changed\n", argv[argc - 1]);
+        }
+
+        else if (!S_ISDIR(stat_buf.st_mode)) {
             processSingle(argc, argv, envp);
+        }
 
         else if (S_ISDIR(stat_buf.st_mode)) {
+            printf("ENTREI: %s\n", argv[argc - 1]);
             int id = fork();
             mke_register_wout_signal(PROC_CREAT,  getpid(), envp, argv, argc, after_buf, before_buf);
             char** new_argv = malloc((argc+1) * sizeof *new_argv);
@@ -77,18 +89,21 @@ int processR(int argc, char* argv[], char* envp[]) {
             strcat(new_argv[argc - 1], "/");
 
             if (id == 0 && strcmp(direntp->d_name, ".") != 0) {   
-                sleep(2);
                 processR(argc, new_argv, envp);
+                mke_register_w_signal(PROC_EXIT,  getpid(),0, exit_c);
+                exit(0);
             }
             else if (id == 0 && strcmp(direntp->d_name, ".") == 0) {
                 processSingle(argc, new_argv, envp);
             }
             else waitpid(id,&status,0);
         }
+
     }
 
-    if (closedir(dir) < 0)
+    if (getpid() == pid && closedir(dir) < 0)
         perror("ERROR2");
 
+    printf("sai\n");
     return 0;
 }

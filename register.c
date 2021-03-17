@@ -44,7 +44,6 @@ void init_file(char *envp[]) {
         return;
     }
     close(of);
-    printf("%s\n",file1);
 }
 
 

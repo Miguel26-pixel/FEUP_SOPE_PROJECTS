@@ -55,7 +55,9 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
 
 void printPermissions(struct stat fileStat)
 {
-    printf((S_ISDIR(fileStat.st_mode)) ? "d" : "-");
+    if (S_ISDIR(fileStat.st_mode)) printf("d");
+    else if (S_ISLNK(fileStat.st_mode)) printf("l");
+    else printf("-");
     printf((fileStat.st_mode & S_IRUSR) ? "r" : "-");
     printf((fileStat.st_mode & S_IWUSR) ? "w" : "-");
     printf((fileStat.st_mode & S_IXUSR) ? "x" : "-");
@@ -71,6 +73,14 @@ bool checkR(int argc, char *argv[])
 {
     for (int i = 0; i < argc; i++)
         if (!strcmp(argv[i], "-R"))
+            return true;
+    return false;
+}
+
+bool checkV(int argc, char *argv[])
+{
+    for (int i = 0; i < argc; i++)
+        if (!strcmp(argv[i], "-v"))
             return true;
     return false;
 }
