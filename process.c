@@ -25,8 +25,6 @@ int processSingle(int argc, char* argv[], char* envp[]){
 
     mke_register_wout_signal(FILE_MODF,  getpid(), envp, argv, argc, after_buf,before_buf);
 
-    mke_register_wout_signal(PROC_EXIT,  getpid(), envp, argv, argc, after_buf,before_buf);
-
     return 0;
 }
 
@@ -36,6 +34,7 @@ int processR(int argc, char* argv[], char* envp[]) {
     struct dirent* direntp;
     struct stat stat_buf;
     int status;
+    struct stat after_buf,before_buf;
 
     processSingle(argc,argv,envp);
 
@@ -66,6 +65,7 @@ int processR(int argc, char* argv[], char* envp[]) {
 
         else if (S_ISDIR(stat_buf.st_mode)) {
             int id = fork();
+            mke_register_wout_signal(PROC_CREAT,  getpid(), envp, argv, argc, after_buf, before_buf);
             char** new_argv = malloc((argc+1) * sizeof *new_argv);
             for(int i = 0; i < argc; ++i)
             {

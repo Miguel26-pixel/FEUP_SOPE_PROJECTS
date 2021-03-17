@@ -64,15 +64,10 @@ void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* 
             sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
             sprintf(buffer+strlen(buffer), "%d; ", pid);
             sprintf(buffer+strlen(buffer), "PROC_CREAT; ");
-            sprintf(buffer+strlen(buffer), "argumentos da linha de comandos que origina o processo;\n");
-            write(of, buffer, strlen(buffer));
-            break;
-        case PROC_EXIT:
-            mid = times(buf);
-            sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
-            sprintf(buffer+strlen(buffer), "%d; ", pid);
-            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
-            sprintf(buffer+strlen(buffer), "código de saída do processo\n");
+            for(int i = 0;i < argc ; i++){
+                sprintf(buffer+strlen(buffer), "%s;", argv[i]);
+            }
+            sprintf(buffer+strlen(buffer), "\n");
             write(of, buffer, strlen(buffer));
             break;
         case FILE_MODF:
@@ -91,7 +86,7 @@ void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* 
     close(of);
 }
 
-void mke_register_w_signal(enum event event,  pid_t pid, int signo)
+void mke_register_w_signal(enum event event,  pid_t pid, int signo, int exit_c)
 {
     char buffer[1024]; 
     memset(buffer,0,strlen(buffer));
@@ -101,6 +96,14 @@ void mke_register_w_signal(enum event event,  pid_t pid, int signo)
         return;
     }
     switch(event){
+        case PROC_EXIT:
+            mid = times(buf);
+            sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);
+            sprintf(buffer+strlen(buffer), "%d; ", pid);
+            sprintf(buffer+strlen(buffer), "PROC_EXIT; ");
+            sprintf(buffer+strlen(buffer), "%d\n", exit_c);
+            write(of, buffer, strlen(buffer));
+            break;
         case SIGNAL_RECV:
             mid = times(buf);
             sprintf(buffer, "%4.5f sec; ", (double)(mid-start)/ticks);

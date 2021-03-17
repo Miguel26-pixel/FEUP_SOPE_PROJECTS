@@ -1,10 +1,20 @@
-0.00000 sec; 42594; FILE_MODF; dirTest/ : 0755 : 0777;
-0.00000 sec; 42594; PROC_EXIT; código de saída do processo
-0.00000 sec; 42594; FILE_MODF; dirTest/newfile5 : 0755 : 0777;
-0.00000 sec; 42594; PROC_EXIT; código de saída do processo
-0.57000 sec; 42594; SIGNAL_SENT; 2 : 42594
-0.57000 sec; 42594; SIGNAL_SENT; 2 : 42595
-0.57000 sec; 42595; SIGNAL_RECV; 2
-0.57000 sec; 42594; SIGNAL_RECV; 2
-2.21000 sec; 42594; SIGNAL_SENT; 15 : 42595
-2.21000 sec; 42595; SIGNAL_RECV; 15
+0.00000 sec; 14227; FILE_MODF; dirTest/ : 0777 : 0777;
+0.00000 sec; 14227; FILE_MODF; dirTest/newfile2 : 0777 : 0777;
+0.00000 sec; 14227; PROC_CREAT; ./xmod;-R;0777;dirTest/2dirTest;
+0.00000 sec; 14228; PROC_CREAT; ./xmod;-R;0777;dirTest/2dirTest;
+0.85000 sec; 14227; SIGNAL_SENT; 2 : 14228
+0.85000 sec; 14227; SIGNAL_SENT; 2 : 14227
+0.85000 sec; 14228; SIGNAL_RECV; 2
+0.85000 sec; 14227; SIGNAL_RECV; 2
+2.20000 sec; 14227; PROC_EXIT; 0
+2.20000 sec; 14228; SIGNAL_RECV; 18
+2.20000 sec; 14227; SIGNAL_SENT; 18 : 14228
+2.20000 sec; 14228; FILE_MODF; dirTest/2dirTest/ : 0777 : 0777;
+2.20000 sec; 14228; FILE_MODF; dirTest/2dirTest/teste1.txt : 0777 : 0777;
+2.20000 sec; 14228; FILE_MODF; dirTest/2dirTest/teste3.txt : 0777 : 0777;
+2.20000 sec; 14228; FILE_MODF; dirTest/2dirTest/teste2.txt : 0777 : 0777;
+2.43000 sec; 14227; FILE_MODF; dirTest/newfile3 : 0777 : 0777;
+2.43000 sec; 14227; FILE_MODF; dirTest/newfile4 : 0777 : 0777;
+2.43000 sec; 14227; FILE_MODF; dirTest/newfile5 : 0777 : 0777;
+2.43000 sec; 14227; FILE_MODF; dirTest/newfile1 : 0777 : 0777;
+2.43000 sec; 14227; PROC_EXIT; 0

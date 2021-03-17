@@ -19,6 +19,7 @@ extern int current_pid;
 extern bool signal_sent;
 
 int main(int argc, char* argv[], char* envp[]) {
+    int exit_c = 0;
     if (argc < 3) { //without OPTIONS
         printf("usage: xmod [OPTIONS] MODE FILE/DIR\n");
         return 0;
@@ -37,8 +38,12 @@ int main(int argc, char* argv[], char* envp[]) {
     current_pid = getpid();
 
     if (!checkR(argc,argv))
-        return processSingle(argc, argv, envp);
-    else return processR(argc, argv, envp);
+        exit_c = processSingle(argc, argv, envp);
+    else exit_c = processR(argc, argv, envp);
+
+    mke_register_w_signal(PROC_EXIT,  getpid(),0, exit_c);
+
+    return exit_c;
 }
 
 //#define S_IRWXU 0000700 // RWX mask for owner 

@@ -12,20 +12,22 @@ void getFichDir(const char *fichDir){
 }
 
 void sigcontHandler(int sig) {
-    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
-    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
+    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig, 0);
+    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig, 0);
+    
 }
 
 void sigtermHandler(int sig) {
     printf("td ok");
-    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
-    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
+    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig, 0);
+    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig, 0);
+    mke_register_w_signal(PROC_EXIT,  getpid(),0, 0);
     exit(0);
 } 
 
 void sigHandler(int sig) {
-    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig);
-    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig);
+    mke_register_w_signal(SIGNAL_SENT,  getpid(), sig, 0);
+    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig, 0);
     if (getpid() == pid) {
         char answer;
         printf("\n Programmed paused...\n");
@@ -38,9 +40,11 @@ void sigHandler(int sig) {
             printf("%d",current_pid);
             //mke_register_w_signal(SIGNAL_SENT,  getpid(), SIGCONT);
             kill(0, SIGCONT);
+            mke_register_w_signal(PROC_EXIT,  getpid(),0 , 0);
         }
         else{
             kill(0, SIGTERM);
+            mke_register_w_signal(PROC_EXIT,  getpid(),0 , 0);
             exit(0);
         }
         signal(SIGINT, sigHandler);
