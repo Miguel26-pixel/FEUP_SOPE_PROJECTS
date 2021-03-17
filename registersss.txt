@@ -1,14 +1,14 @@
-0.00000 sec; 16551; FILE_MODF; dirTest/ : 0755 : 0755;
-0.00000 sec; 16551; FILE_MODF; dirTest/newfile5 : 0755 : 0755;
-0.00000 sec; 16551; PROC_CREAT; ./xmod;-R;-v;0755;dirTest/2dirTest;
-0.00000 sec; 16552; PROC_CREAT; ./xmod;-R;-v;0755;dirTest/2dirTest;
-0.00000 sec; 16552; FILE_MODF; dirTest/2dirTest/ : 0755 : 0755;
-0.00000 sec; 16552; FILE_MODF; dirTest/2dirTest/teste3.txt : 0755 : 0755;
-0.00000 sec; 16552; FILE_MODF; dirTest/2dirTest/teste2.txt : 0755 : 0755;
-0.00000 sec; 16552; FILE_MODF; dirTest/2dirTest/teste1.txt : 0755 : 0755;
-0.00000 sec; 16552; FILE_MODF; dirTest/2dirTest/prob_02 : 0755 : 0755;
-0.01000 sec; 16551; FILE_MODF; dirTest/newfile3 : 0755 : 0755;
-0.01000 sec; 16551; FILE_MODF; dirTest/newfile1 : 0755 : 0755;
-0.01000 sec; 16551; FILE_MODF; dirTest/newfile2 : 0755 : 0755;
-0.01000 sec; 16551; FILE_MODF; dirTest/newfile4 : 0755 : 0755;
-0.01000 sec; 16551; PROC_EXIT; 0
+19.46000 sec; 10598; FILE_MODF; dirTest/ : 0755 : 0755;
+21.65000 sec; 10598; FILE_MODF; dirTest/newfile5 : 0755 : 0755;
+22.38000 sec; 10601; PROC_CREAT; ./xmod;-R;-v;0755;dirTest/2dirTest;
+23.11000 sec; 10598; PROC_CREAT; ./xmod;-R;-v;0755;dirTest/2dirTest;
+26.04000 sec; 10601; FILE_MODF; dirTest/2dirTest/ : 0755 : 0755;
+30.25000 sec; 10601; FILE_MODF; dirTest/2dirTest/teste3.txt : 0755 : 0755;
+35.02000 sec; 10601; FILE_MODF; dirTest/2dirTest/teste2.txt : 0755 : 0755;
+35.02000 sec; 10601; FILE_MODF; dirTest/2dirTest/teste1.txt : 0755 : 0755;
+35.02000 sec; 10601; FILE_MODF; dirTest/2dirTest/prob_02 : 0755 : 0755;
+35.35000 sec; 10598; FILE_MODF; dirTest/newfile3 : 0755 : 0755;
+35.35000 sec; 10598; FILE_MODF; dirTest/newfile1 : 0755 : 0755;
+35.35000 sec; 10598; FILE_MODF; dirTest/newfile2 : 0755 : 0755;
+35.36000 sec; 10598; FILE_MODF; dirTest/newfile4 : 0755 : 0755;
+35.46000 sec; 10598; PROC_EXIT; 0
