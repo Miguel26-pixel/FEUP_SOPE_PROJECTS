@@ -21,7 +21,7 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
     {
         if (after.st_mode == before.st_mode)
         {
-            printf("mode of '%s' retained as %s (", argv[argc - 1], argv[argc - 2]);
+            printf("mode of '%s' retained as 0%d (", argv[argc - 1], convertDecimalToOctal(after.st_mode) % 1000);
             printPermissions(after);
             printf(")\n");
             nftot++;
@@ -30,7 +30,7 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
         {
             printf("mode of '%s' changed from 0%d (", argv[argc - 1], convertDecimalToOctal(before.st_mode) % 1000);
             printPermissions(before);
-            printf(") to %s (", argv[argc - 2]);
+            printf(") to 0%d (", convertDecimalToOctal(after.st_mode) % 1000);
             printPermissions(after);
             printf(")\n");
             nfmod++;
@@ -44,7 +44,7 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
         {
             printf("mode of '%s' changed from 0%d (", argv[argc - 1], convertDecimalToOctal(before.st_mode) % 1000);
             printPermissions(before);
-            printf(") to %s (", argv[argc - 2]);
+            printf(") to 0%d (", convertDecimalToOctal(after.st_mode) % 1000);
             printPermissions(after);
             printf(")\n");
             nfmod++;
