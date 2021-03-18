@@ -77,7 +77,8 @@ int processR(int argc, char* argv[], char* envp[]) {
         else if (S_ISDIR(stat_buf.st_mode)) {
             printf("ENTREI: %s\n", argv[argc - 1]);
             int id = fork();
-            mke_register_wout_signal(PROC_CREAT,  getpid(), envp, argv, argc, after_buf, before_buf);
+            if (id == 0)
+                mke_register_wout_signal(PROC_CREAT,  getpid(), envp, argv, argc, after_buf, before_buf);
             char** new_argv = malloc((argc+1) * sizeof *new_argv);
             for(int i = 0; i < argc; ++i)
             {
@@ -90,7 +91,7 @@ int processR(int argc, char* argv[], char* envp[]) {
 
             if (id == 0 && strcmp(direntp->d_name, ".") != 0) {   
                 processR(argc, new_argv, envp);
-                mke_register_w_signal(PROC_EXIT,  getpid(),0, exit_c);
+                mke_register_w_signal(PROC_EXIT,  getpid(),0, 0);
                 exit(0);
             }
             else if (id == 0 && strcmp(direntp->d_name, ".") == 0) {

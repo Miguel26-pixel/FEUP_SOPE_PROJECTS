@@ -4,11 +4,13 @@ struct stat processMODE(int argc, char* argv[]) {
     char users[4], permissions[3], operator;
     int j = 0;
 
+
+
     for (size_t i = 0; i < strlen(argv[argc - 2]); i++) {
         if (argv[argc - 2][i] == 'u' || argv[argc - 2][i] == 'g' || argv[argc - 2][i] == 'o' || argv[argc - 2][i] == 'a')
             users[i] = argv[argc - 2][i];
         else if (argv[argc - 2][i] == '+' || argv[argc - 2][i] == '-' || argv[argc - 2][i] == '=') 
-            operator = argv[1][i];
+            operator = argv[argc - 2][i];
         else if (argv[argc - 2][i] == 'r' || argv[argc - 2][i] == 'w' || argv[argc - 2][i] == 'x') {
             permissions[j] = argv[argc - 2][i];             
             j++;
@@ -23,7 +25,8 @@ struct stat processMODE(int argc, char* argv[]) {
     struct stat stat_buf;
     stat(argv[argc - 1], &stat_buf);
 
-    if (operator == '=') stat_buf.st_mode = 0;
+
+    if (operator == '=') stat_buf.st_mode = 0; 
 
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 4; j++)
@@ -94,6 +97,8 @@ struct stat processMODE(int argc, char* argv[]) {
                     break;
                 default: break;
             }
+
+
     return stat_buf;
 }
 

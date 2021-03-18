@@ -25,9 +25,16 @@ int main(int argc, char* argv[], char* envp[]) {
         return 0;
     }
 
+    struct stat a,b;
+
+    
+
+
     init_clock();
 
     init_file(envp);
+
+    mke_register_wout_signal(PROC_CREAT,  getpid(), envp, argv, argc, a, b);
 
     getFichDir(argv[argc-1]);
 
