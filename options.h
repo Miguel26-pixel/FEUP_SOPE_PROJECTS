@@ -13,3 +13,5 @@ void printPermissions(struct stat fileStat);
 bool checkR(int argc, char* argv[]);
 
 bool checkV(int argc, char *argv[]);
+
+bool checkC(int argc, char *argv[]);

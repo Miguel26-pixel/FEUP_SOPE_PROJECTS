@@ -9,15 +9,7 @@ extern unsigned nfmod, nftot;
 
 void processOPTIONSvc(struct stat before, struct stat after, int argc, char *argv[])
 {
-    bool checkV = false, checkC = false;
-    for (int i = 0; i < argc; i++)
-    {
-        if (!strcmp(argv[i], "-v"))
-            checkV = true;
-        if (!strcmp(argv[i], "-c"))
-            checkC = true;
-    }
-    if (checkV)
+    if (checkV(argc,argv))
     {
         if (after.st_mode == before.st_mode)
         {
@@ -35,7 +27,7 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
         }
         return;
     }
-    if (checkC)
+    if (checkC(argc,argv))
     {
         if (after.st_mode != before.st_mode)
         {
@@ -63,16 +55,32 @@ void printPermissions(struct stat fileStat)
 
 bool checkR(int argc, char *argv[])
 {
-    for (int i = 0; i < argc; i++)
-        if (!strcmp(argv[i], "-R"))
-            return true;
+    for (int i = 0; i < argc; i++) {
+        if (argv[i][0] == '-')
+            for (int j = 0; j < strlen(argv[i]); j++)
+                if (argv[i][j] == 'R')
+                    return true;
+    }
     return false;
 }
 
 bool checkV(int argc, char *argv[])
 {
-    for (int i = 0; i < argc; i++)
-        if (!strcmp(argv[i], "-v"))
-            return true;
+    for (int i = 0; i < argc; i++) {
+        if (argv[i][0] == '-')
+            for (int j = 0; j < strlen(argv[i]); j++)
+                if (argv[i][j] == 'v')
+                    return true;
+    }
+    return false;
+}
+
+bool checkC(int argc, char *argv[]) {
+    for (int i = 0; i < argc; i++) {
+        if (argv[i][0] == '-')
+            for (int j = 0; j < strlen(argv[i]); j++)
+                if (argv[i][j] == 'c')
+                    return true;
+    }
     return false;
 }
