@@ -55,9 +55,6 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
 
 void printPermissions(struct stat fileStat)
 {
-    if (S_ISDIR(fileStat.st_mode)) printf("d");
-    else if (S_ISLNK(fileStat.st_mode)) printf("l");
-    else printf("-");
     printf((fileStat.st_mode & S_IRUSR) ? "r" : "-");
     printf((fileStat.st_mode & S_IWUSR) ? "w" : "-");
     printf((fileStat.st_mode & S_IXUSR) ? "x" : "-");

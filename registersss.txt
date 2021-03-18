@@ -1,3 +1,22 @@
-0.00000 sec; 38348; PROC_CREAT; ./xmod;-v;a+r;dirTest/newfile2;
-0.00000 sec; 38348; FILE_MODF; dirTest/newfile2 : 0777 : 0777;
-0.00000 sec; 38348; PROC_EXIT; 0
+0.00000 sec; 11535; PROC_CREAT; xmod;-R;0777;dirTest/;
+0.00000 sec; 11535; FILE_MODF; dirTest/ : 0555 : 0777;
+0.00000 sec; 11535; FILE_MODF; dirTest/newfile5 : 0777 : 0777;
+0.00000 sec; 11537; PROC_CREAT; xmod;-R;0777;dirTest/2dirTest;
+0.00000 sec; 11537; FILE_MODF; dirTest/2dirTest/ : 0777 : 0777;
+0.00000 sec; 11537; FILE_MODF; dirTest/2dirTest/teste3.txt : 0777 : 0777;
+0.00000 sec; 11537; FILE_MODF; dirTest/2dirTest/teste2.txt : 0777 : 0777;
+0.00000 sec; 11537; FILE_MODF; dirTest/2dirTest/teste1.txt : 0777 : 0777;
+0.00000 sec; 11537; FILE_MODF; dirTest/2dirTest/prob_02 : 0777 : 0777;
+0.00000 sec; 11538; PROC_CREAT; xmod;-R;0777;dirTest/2dirTest/3dirTest;
+0.00000 sec; 11538; FILE_MODF; dirTest/2dirTest/3dirTest/ : 0777 : 0777;
+0.00000 sec; 11538; FILE_MODF; dirTest/2dirTest/3dirTest/ola2.txt : 0777 : 0777;
+0.00000 sec; 11538; FILE_MODF; dirTest/2dirTest/3dirTest/ola1.txt : 0717 : 0777;
+0.00000 sec; 11538; FILE_MODF; dirTest/2dirTest/3dirTest/ola3.txt : 0777 : 0777;
+0.00000 sec; 11538; FILE_MODF; dirTest/2dirTest/3dirTest/ola4.txt : 0777 : 0777;
+0.00000 sec; 11538; PROC_EXIT; 0
+0.00000 sec; 11537; PROC_EXIT; 0
+0.00000 sec; 11535; FILE_MODF; dirTest/newfile3 : 0777 : 0777;
+0.00000 sec; 11535; FILE_MODF; dirTest/newfile1 : 0717 : 0777;
+0.00000 sec; 11535; FILE_MODF; dirTest/newfile2 : 0777 : 0777;
+0.00000 sec; 11535; FILE_MODF; dirTest/newfile4 : 0777 : 0777;
+0.00000 sec; 11535; PROC_EXIT; 0

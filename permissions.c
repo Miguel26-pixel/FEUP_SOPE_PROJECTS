@@ -1,14 +1,14 @@
 #include "permissions.h"
 
 struct stat processMODE(int argc, char* argv[]) {
-    char users[4], permissions[3], operator;
+    char user, permissions[3], operator;
     int j = 0;
 
 
 
     for (size_t i = 0; i < strlen(argv[argc - 2]); i++) {
         if (argv[argc - 2][i] == 'u' || argv[argc - 2][i] == 'g' || argv[argc - 2][i] == 'o' || argv[argc - 2][i] == 'a')
-            users[i] = argv[argc - 2][i];
+            user = argv[argc - 2][i];
         else if (argv[argc - 2][i] == '+' || argv[argc - 2][i] == '-' || argv[argc - 2][i] == '=') 
             operator = argv[argc - 2][i];
         else if (argv[argc - 2][i] == 'r' || argv[argc - 2][i] == 'w' || argv[argc - 2][i] == 'x') {
@@ -26,77 +26,90 @@ struct stat processMODE(int argc, char* argv[]) {
     stat(argv[argc - 1], &stat_buf);
 
 
-    if (operator == '=') stat_buf.st_mode = 0; 
+    if (operator == '=') 
+        switch(user) {
+            case 'a':
+                stat_buf.st_mode = 0; 
+                break;
+            case 'o':
+                stat_buf.st_mode = stat_buf.st_mode & ~S_IROTH & ~S_IWOTH & ~S_IXOTH;
+                break;
+            case 'u':
+                stat_buf.st_mode = stat_buf.st_mode & ~S_IRUSR & ~S_IWUSR & ~S_IXUSR;
+                break;
+            case 'g':
+                stat_buf.st_mode = stat_buf.st_mode & ~S_IRGRP & ~S_IWGRP & ~S_IXGRP;
+                break;
+        }
 
     for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 4; j++)
-            switch(permissions[i]){
-                case 'r':
-                    switch (users[j]) {
-                        case 'a':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRUSR | S_IRGRP | S_IROTH;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IRUSR & ~S_IRGRP & ~S_IROTH;
-                            break;
-                        case 'u':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRUSR;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IRUSR;
-                            break;
-                        case 'g':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRGRP;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IRGRP;
-                            break;
-                        case 'o':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IROTH;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IROTH;
-                            break;
-                        default: break;
-                    }
-                    break;
-                case 'w':
-                    switch (users[j]) {
-                        case 'a':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWUSR | S_IWGRP | S_IWOTH;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWUSR & ~S_IWGRP & ~S_IWOTH;
-                            break;
-                        case 'u':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWUSR;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWUSR;
-                            break;
-                        case 'g':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWGRP;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWGRP;
-                            break;
-                        case 'o':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWOTH;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWOTH;
-                            break;
-                        default: break;
-                    }
-                    break;
-                case 'x':
-                    switch (users[j]) {
-                        case 'a':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXUSR | S_IXGRP | S_IXOTH;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXUSR & ~S_IXGRP & ~S_IXOTH;
-                            break;
-                        case 'u':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXUSR;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXUSR;
-                            break;
-                        case 'g':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXGRP;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXGRP;
-                            break;
-                        case 'o':
-                            if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXOTH;
-                            if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXOTH;
-                            break;
-                        default: 
+        switch(permissions[i]){
+            case 'r':
+                switch (user) {
+                    case 'a':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRUSR | S_IRGRP | S_IROTH;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IRUSR & ~S_IRGRP & ~S_IROTH;
                         break;
-                    }
+                    case 'u':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRUSR;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IRUSR;
+                        break;
+                    case 'g':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IRGRP;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IRGRP;
+                        break;
+                    case 'o':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IROTH;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IROTH;
+                        break;
+                    default: break;
+                }
+                break;
+            case 'w':
+                switch (user) {
+                    case 'a':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWUSR | S_IWGRP | S_IWOTH;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWUSR & ~S_IWGRP & ~S_IWOTH;
+                        break;
+                    case 'u':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWUSR;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWUSR;
+                        break;
+                    case 'g':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWGRP;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWGRP;
+                        break;
+                    case 'o':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IWOTH;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IWOTH;
+                        break;
+                    default: break;
+                }
+                break;
+            case 'x':
+                switch (user) {
+                    case 'a':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXUSR | S_IXGRP | S_IXOTH;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXUSR & ~S_IXGRP & ~S_IXOTH;
+                        break;
+                    case 'u':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXUSR;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXUSR;
+                        break;
+                    case 'g':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXGRP;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXGRP;
+                        break;
+                    case 'o':
+                        if (operator == '+' || operator == '=') stat_buf.st_mode = stat_buf.st_mode | S_IXOTH;
+                        if (operator == '-') stat_buf.st_mode = stat_buf.st_mode & ~S_IXOTH;
+                        break;
+                    default: 
                     break;
-                default: break;
-            }
+                }
+                break;
+            default: break;
+        }
 
 
     return stat_buf;

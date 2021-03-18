@@ -75,7 +75,6 @@ int processR(int argc, char* argv[], char* envp[]) {
         }
 
         else if (S_ISDIR(stat_buf.st_mode)) {
-            printf("ENTREI: %s\n", argv[argc - 1]);
             int id = fork();
             if (id == 0)
                 mke_register_wout_signal(PROC_CREAT,  getpid(), envp, argv, argc, after_buf, before_buf);
@@ -105,6 +104,5 @@ int processR(int argc, char* argv[], char* envp[]) {
     if (getpid() == pid && closedir(dir) < 0)
         perror("ERROR2");
 
-    printf("sai\n");
     return 0;
 }
