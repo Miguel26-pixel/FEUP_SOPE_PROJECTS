@@ -17,9 +17,12 @@ long ticks;
 pid_t pid;
 extern int current_pid;
 extern bool signal_sent;
+extern int nfmod, nftot;
 
 int main(int argc, char* argv[], char* envp[]) {
     int exit_c = 0;
+    nftot = 0;
+    nfmod = 0;
     if (argc < 3) { //without OPTIONS
         printf("usage: xmod [OPTIONS] MODE FILE/DIR\n");
         return 0;
@@ -27,12 +30,11 @@ int main(int argc, char* argv[], char* envp[]) {
 
     struct stat a,b;
 
-    
-
-
     init_clock();
 
-    init_file(envp);
+    if (getpid() == getpgrp())
+        init_file(envp);
+    else init_file_children(envp);
 
     mke_register_wout_signal(PROC_CREAT,  getpid(), envp, argv, argc, a, b);
 
@@ -40,7 +42,17 @@ int main(int argc, char* argv[], char* envp[]) {
 
     pid = getpid();
     
+    signal(SIGHUP, sigHandlerDefault);
+    signal(SIGQUIT, sigHandlerDefault);
+    signal(SIGUSR1, sigHandlerDefault);
+    signal(SIGSEGV, sigHandlerDefault);
+    signal(SIGUSR2, sigHandlerDefault);
+    signal(SIGPIPE, sigHandlerDefault);
+    signal(SIGALRM, sigHandlerDefault);
+    signal(SIGCHLD, sigHandlerDefault);
+
     signal(SIGINT, sigHandler);
+
     signal_sent = true;
     current_pid = getpid();
 

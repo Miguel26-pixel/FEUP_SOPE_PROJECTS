@@ -18,27 +18,27 @@ void sigcontHandler(int sig) {
 }
 
 void sigtermHandler(int sig) {
-    printf("td ok");
     mke_register_w_signal(SIGNAL_SENT,  getpid(), sig, 0);
     mke_register_w_signal(SIGNAL_RECV,  getpid(), sig, 0);
     mke_register_w_signal(PROC_EXIT,  getpid(),0, 0);
     exit(0);
 } 
 
+void sigHandlerDefault(int sig) {
+    mke_register_w_signal(SIGNAL_RECV,  getpid(), sig, 0);
+}
+
 void sigHandler(int sig) {
     mke_register_w_signal(SIGNAL_SENT,  getpid(), sig, 0);
     mke_register_w_signal(SIGNAL_RECV,  getpid(), sig, 0);
-    if (getpid() == pid) {
+    if (getpid() == getpgrp()) {
         char answer;
         printf("\n Programmed paused...\n");
-        printf("pid: %d; fich/dir: %s; nftot: %d; nfmod: %d",getpid(),path,nftot,nfmod);
+        printf("pid: %d; fich/dir: %s; nftot: %d; nfmod: %d\n",getpid(),path,nftot,nfmod);
         if(signal_sent){signal_sent=false;}
-        printf("\nWould you like to continue? Enter y or n: ");
+        printf("Would you like to continue? Enter y or n: \n");
         scanf(" %c", &answer);
         if (answer == 'y') {
-            current_pid = getpid();
-            printf("%d",current_pid);
-            //mke_register_w_signal(SIGNAL_SENT,  getpid(), SIGCONT);
             kill(0, SIGCONT);
             mke_register_w_signal(PROC_EXIT,  getpid(),0 , 0);
         }
@@ -52,6 +52,7 @@ void sigHandler(int sig) {
         return;
     }
     else {
+        printf("pid: %d; fich/dir: %s; nftot: %d; nfmod: %d\n",getpid(),path,nftot,nfmod);
         signal(SIGCONT, sigcontHandler);
         signal(SIGTERM, sigtermHandler);
         pause();

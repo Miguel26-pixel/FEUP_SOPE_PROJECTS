@@ -24,7 +24,6 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
             printf("mode of '%s' retained as 0%d (", argv[argc - 1], convertDecimalToOctal(after.st_mode) % 1000);
             printPermissions(after);
             printf(")\n");
-            nftot++;
         }
         else
         {
@@ -33,8 +32,6 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
             printf(") to 0%d (", convertDecimalToOctal(after.st_mode) % 1000);
             printPermissions(after);
             printf(")\n");
-            nfmod++;
-            nftot++;
         }
         return;
     }
@@ -47,8 +44,6 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
             printf(") to 0%d (", convertDecimalToOctal(after.st_mode) % 1000);
             printPermissions(after);
             printf(")\n");
-            nfmod++;
-            nftot++;
         }
     }
 }

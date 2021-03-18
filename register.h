@@ -26,3 +26,5 @@ void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* 
 void mke_register_w_signal(enum event event,  pid_t pid, int signo, int exit_c);
 
 void init_file(char *envp[]);
+
+void init_file_children(char *envp[]);

@@ -40,11 +40,23 @@ void init_file(char *envp[]) {
     env_path(envp);
     int of = open(file1,O_CREAT|O_RDWR|O_TRUNC,0777);
     if (of == -1){ 
-        perror("ERROR: ");
+        perror("ERROR"); //
         return;
     }
     close(of);
 }
+
+void init_file_children(char *envp[]) {
+    memset(file1,0,strlen(file1));
+    env_path(envp);
+    int of = open(file1,O_CREAT|O_RDWR,0777);
+    if (of == -1){ 
+        perror("ERROR"); //
+        return;
+    }
+    close(of);
+}
+
 
 
 
@@ -54,7 +66,7 @@ void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* 
     memset(buffer,0,strlen(buffer));
     int of = open(file1,O_CREAT|O_RDWR|O_APPEND,0777);
     if (of == -1){ 
-        perror("ERROR: ");
+        perror("ERROR");
         return;
     }
     switch(event){
@@ -91,7 +103,7 @@ void mke_register_w_signal(enum event event,  pid_t pid, int signo, int exit_c)
     memset(buffer,0,strlen(buffer));
     int of = open(file1,O_CREAT|O_RDWR|O_APPEND,0777);
     if (of == -1){ 
-        perror("ERROR: ");
+        perror("ERROR");
         return;
     }
     switch(event){

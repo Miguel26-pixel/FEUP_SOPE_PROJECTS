@@ -1,6 +1,6 @@
  #include "process.h"
 
-extern int current_pid;
+extern int current_pid, nftot, nfmod;
 extern bool signal_sent;
 extern pid_t pid;
 
@@ -17,10 +17,17 @@ int processSingle(int argc, char* argv[], char* envp[]){
         return 1;
     }
 
+    
+
     if (!changePermissions(argv[argc-1],after_buf)) 
         printf("Can't change Permissions!");
 
     lstat(argv[argc - 1], &after_buf);
+
+    nftot++;
+
+    if (after_buf.st_mode != before_buf.st_mode)
+        nfmod++;
 
     processOPTIONSvc(before_buf,after_buf,argc,argv);
 
@@ -35,7 +42,7 @@ int processR(int argc, char* argv[], char* envp[]) {
     struct dirent* direntp;
     struct stat stat_buf;
     int status;
-    struct stat after_buf,before_buf;
+    struct stat;
 
     processSingle(argc,argv,envp);
 
@@ -48,7 +55,6 @@ int processR(int argc, char* argv[], char* envp[]) {
     }
 
      while((direntp = readdir(dir)) != NULL) {
-            //sleep(2);
 
         if (!strcmp(direntp->d_name, "..")) continue;
         if (!strcmp(direntp->d_name, ".")) continue;
@@ -76,8 +82,6 @@ int processR(int argc, char* argv[], char* envp[]) {
 
         else if (S_ISDIR(stat_buf.st_mode)) {
             int id = fork();
-            if (id == 0)
-                mke_register_wout_signal(PROC_CREAT,  getpid(), envp, argv, argc, after_buf, before_buf);
             char** new_argv = malloc((argc+1) * sizeof *new_argv);
             for(int i = 0; i < argc; ++i)
             {
@@ -88,8 +92,8 @@ int processR(int argc, char* argv[], char* envp[]) {
             new_argv[argc] = NULL;
             strcat(new_argv[argc - 1], "/");
 
-            if (id == 0 && strcmp(direntp->d_name, ".") != 0) {   
-                processR(argc, new_argv, envp);
+            if (id == 0 && strcmp(direntp->d_name, ".") != 0) {
+                execve("xmod", argv, envp);
                 mke_register_w_signal(PROC_EXIT,  getpid(),0, 0);
                 exit(0);
             }
