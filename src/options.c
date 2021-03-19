@@ -7,8 +7,7 @@ mode of 'fileForTests' changed from 0444 (r--r--r--) to 0755 (rwxr-xr-x)
 
 extern unsigned nfmod, nftot;
 
-void processOPTIONSvc(struct stat before, struct stat after, int argc, char *argv[])
-{
+void processOPTIONSvc(struct stat before, struct stat after, int argc, char *argv[]) {
     if (checkV(argc,argv))
     {
         if (after.st_mode == before.st_mode)
@@ -40,8 +39,7 @@ void processOPTIONSvc(struct stat before, struct stat after, int argc, char *arg
     }
 }
 
-void printPermissions(struct stat fileStat)
-{
+void printPermissions(struct stat fileStat) {
     printf((fileStat.st_mode & S_IRUSR) ? "r" : "-");
     printf((fileStat.st_mode & S_IWUSR) ? "w" : "-");
     printf((fileStat.st_mode & S_IXUSR) ? "x" : "-");
@@ -53,8 +51,7 @@ void printPermissions(struct stat fileStat)
     printf((fileStat.st_mode & S_IXOTH) ? "x" : "-");
 }
 
-bool checkR(int argc, char *argv[])
-{
+bool checkR(int argc, char *argv[]) {
     for (int i = 0; i < argc; i++) {
         if (argv[i][0] == '-')
             for (int j = 0; j < strlen(argv[i]); j++)
@@ -64,8 +61,7 @@ bool checkR(int argc, char *argv[])
     return false;
 }
 
-bool checkV(int argc, char *argv[])
-{
+bool checkV(int argc, char *argv[]) {
     for (int i = 0; i < argc; i++) {
         if (argv[i][0] == '-')
             for (int j = 0; j < strlen(argv[i]); j++)

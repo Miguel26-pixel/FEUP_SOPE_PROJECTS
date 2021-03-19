@@ -3,6 +3,7 @@
 extern int current_pid, nftot, nfmod;
 extern bool signal_sent;
 extern pid_t pid;
+extern char **environ;
 
 int processSingle(int argc, char* argv[], char* envp[]){
     struct stat after_buf,before_buf;
@@ -67,7 +68,7 @@ int processR(int argc, char* argv[], char* envp[]) {
         strcat(argv[argc - 1], direntp->d_name);
         if (lstat(argv[argc - 1], &stat_buf) != 0) {
             printf("%s\n", argv[argc - 1]);
-            perror("Error:"); //a)
+            perror("ERROR"); //a)
         }
 
 
@@ -84,7 +85,7 @@ int processR(int argc, char* argv[], char* envp[]) {
             int id = fork();
 
             if (id == 0 && strcmp(direntp->d_name, ".") != 0) {
-                execve(argv[0], argv, envp);
+                execve(argv[0], argv, environ);
                 mke_register_w_signal(PROC_EXIT,  getpid(),0, 0);
                 exit(0);
             }
@@ -97,7 +98,7 @@ int processR(int argc, char* argv[], char* envp[]) {
     }
 
     if (getpid() == pid && closedir(dir) < 0)
-        perror("ERROR2");
+        perror("ERROR");
 
     return 0;
 }
