@@ -82,23 +82,13 @@ int processR(int argc, char* argv[], char* envp[]) {
 
         else if (S_ISDIR(stat_buf.st_mode)) {
             int id = fork();
-            char** new_argv = malloc((argc+1) * sizeof *new_argv);
-            for(int i = 0; i < argc; ++i)
-            {
-                size_t length = strlen(argv[i])+1;
-                new_argv[i] = malloc(length);
-                memcpy(new_argv[i], argv[i], length);
-            }
-            new_argv[argc] = NULL;
-            strcat(new_argv[argc - 1], "/");
-
             if (id == 0 && strcmp(direntp->d_name, ".") != 0) {
-                execve("xmod", argv, envp);
+                execve(argv[0], argv, envp);
                 mke_register_w_signal(PROC_EXIT,  getpid(),0, 0);
                 exit(0);
             }
             else if (id == 0 && strcmp(direntp->d_name, ".") == 0) {
-                processSingle(argc, new_argv, envp);
+                processSingle(argc, argv, envp);
             }
             else waitpid(id,&status,0);
         }
