@@ -12,6 +12,21 @@
 #include "register.h"
 #include "options.h"
 
+/**
+ * @brief Processes the command, if it is not with the -R option.
+ * 
+ * @param argc 
+ * @param argv 
+ * @param envp 
+ * @return int 
+ */
 int processSingle(int argc, char* argv[], char* envp[]);
-
+/**
+ * @brief Processes the command, only when it has the -R option.
+ * 
+ * @param argc 
+ * @param argv 
+ * @param envp 
+ * @return int 
+ */
 int processR(int argc, char* argv[], char* envp[]);
