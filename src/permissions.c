@@ -4,8 +4,6 @@ struct stat processMODE(int argc, char* argv[]) {
     char user, permissions[3], operator;
     int j = 0;
 
-
-
     for (size_t i = 0; i < strlen(argv[argc - 2]); i++) {
         if (argv[argc - 2][i] == 'u' || argv[argc - 2][i] == 'g' || argv[argc - 2][i] == 'o' || argv[argc - 2][i] == 'a')
             user = argv[argc - 2][i];

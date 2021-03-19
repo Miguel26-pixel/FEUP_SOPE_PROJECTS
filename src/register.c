@@ -69,7 +69,7 @@ void mke_register_wout_signal(enum event event,  pid_t pid, char *envp[], char* 
     switch(event){
         case PROC_CREAT:
             mid = times(buf);
-            sprintf(buffer, "%4.5f ms; ", (double)(mid-strtol(getenv("START_CLOCK"),&ptr,10))/ticks*10*10*10);
+            sprintf(buffer, "%f ms; ", (double)(mid-strtol(getenv("START_CLOCK"),&ptr,10))/ticks*10*10*10);
             sprintf(buffer+strlen(buffer), "%d; ", pid);
             sprintf(buffer+strlen(buffer), "PROC_CREAT; ");
             for(int i = 0;i < argc ; i++){
