@@ -7,7 +7,7 @@ int current_pid = 0;
 extern pid_t pid;
 
 void getFichDir(const char *fichDir){
-        path = malloc(sizeof(fichDir));
+        path = malloc(strlen(fichDir)+1);
         strcpy(path,fichDir);
 }
 
