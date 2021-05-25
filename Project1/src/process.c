@@ -82,8 +82,9 @@ int processR(int argc, char* argv[], char* envp[]) {
         }
 
         else if (S_ISDIR(stat_buf.st_mode)) {
-            int id = fork();
 
+            int id = fork();
+            
             if (id == 0 && strcmp(direntp->d_name, ".") != 0) {
                 execve(argv[0], argv, environ);
                 mke_register_w_signal(PROC_EXIT,  getpid(),0, 0);
